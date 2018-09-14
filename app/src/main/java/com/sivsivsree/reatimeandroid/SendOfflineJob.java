@@ -28,6 +28,7 @@ public class SendOfflineJob extends Job {
         // Job has been saved to disk.
         // This is a good place to dispatch a UI event to indicate the job will eventually run.
         // In this example, it would be good to update the UI with the newly posted tweet.
+
         Toast.makeText(context, "Sending", Toast.LENGTH_SHORT).show();
     }
     @Override
