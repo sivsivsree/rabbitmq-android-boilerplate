@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.birbit.android.jobqueue.JobManager;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -41,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     boolean activeTask = false;
     Timer timer;
     final Handler h = new Handler();
-    int j=0;
+    JobManager jobManager;
+    int j = 0;
     Runnable runnable = new Runnable() {
         private long time = 0;
         int i = 0;
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        jobManager = App.getInstance().getJobManager();
         data = findViewById(R.id.data);
         button = findViewById(R.id.button);
         pick = findViewById(R.id.pick);
@@ -124,12 +127,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendDataFromRabbitMQ(){
-      Send send = new Send();
-      j++;
+    public void sendDataFromRabbitMQ() {
+
+        j++;
         try {
-            send.send(this, j);
-            Toast.makeText(this, "Data Send.", Toast.LENGTH_SHORT);
+
+            jobManager.addJobInBackground(new SendOfflineJob(getApplicationContext(), j + ""));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
