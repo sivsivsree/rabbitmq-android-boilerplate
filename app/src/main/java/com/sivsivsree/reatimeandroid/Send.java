@@ -1,6 +1,4 @@
 package com.sivsivsree.reatimeandroid;
-import android.content.Context;
-import android.widget.Toast;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -10,7 +8,7 @@ public class Send {
 
     private final static String QUEUE_NAME = "new_task";
 
-    public static void send(Context context, int i) throws Exception {
+    public void send(String i) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("192.168.47.153");
         factory.setUsername("root");
