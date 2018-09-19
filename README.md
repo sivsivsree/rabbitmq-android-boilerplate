@@ -1,3 +1,3 @@
-# Parse Android Boilerplate
+# Rannitmq  Android Boilerplate
 
 document in progerss
