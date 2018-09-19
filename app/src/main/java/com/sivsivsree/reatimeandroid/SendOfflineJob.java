@@ -2,7 +2,6 @@ package com.sivsivsree.reatimeandroid;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.widget.Toast;
 
 import com.birbit.android.jobqueue.CancelReason;
 import com.birbit.android.jobqueue.Job;
@@ -14,31 +13,35 @@ public class SendOfflineJob extends Job {
     private String text;
     Context context;
     Send send;
-    public SendOfflineJob( Context context,String text) {
+
+    public SendOfflineJob(String text) {
         // This job requires network connectivity,
         // and should be persisted in case the application exits before job is completed.
 
         super(new Params(PRIORITY).requireNetwork().persist());
-        this.context = context;
+        //this.context = context;
         this.text = text;
         send = new Send();
     }
+
     @Override
     public void onAdded() {
         // Job has been saved to disk.
         // This is a good place to dispatch a UI event to indicate the job will eventually run.
         // In this example, it would be good to update the UI with the newly posted tweet.
 
-        Toast.makeText(context, "Sending", Toast.LENGTH_SHORT).show();
+
     }
+
     @Override
     public void onRun() throws Throwable {
         // Job logic goes here. In this example, the network call to post to Twitter is done here.
         // All work done here should be synchronous, a job is removed from the queue once
         // onRun() finishes.
-        send.send(text);
+        send.send("{'data':'" + text + "', 'type':'LIVE_DATA'}");
 
     }
+
     @Override
     protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount,
                                                      int maxRunCount) {
@@ -48,6 +51,7 @@ public class SendOfflineJob extends Job {
         // delay to the whole group to preserve jobs' running order.
         return RetryConstraint.createExponentialBackoff(runCount, 1000);
     }
+
     @Override
     protected void onCancel(@CancelReason int cancelReason, @Nullable Throwable throwable) {
         // Job has exceeded retry attempts or shouldReRunOnThrowable() has decided to cancel.
