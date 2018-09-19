@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             // do stuff then
             // can call h again after work!
 
-
+            sendDataFromRabbitMQ();
             reset();
 
             time += 1000;
@@ -76,13 +76,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addToOfflineQueue(View view) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendDataFromRabbitMQ();
-            }
-        }).start();
 
         h.postDelayed(runnable, 1000); // 1 second delay (takes millis)
 
@@ -132,11 +125,15 @@ public class MainActivity extends AppCompatActivity {
         j++;
         try {
 
-            jobManager.addJobInBackground(new SendOfflineJob(getApplicationContext(), j + ""));
+            jobManager.addJobInBackground(new SendOfflineJob(j + ""));
+            //new Thread(() -> new Send().send("{'data':'" + "hello" + "', 'type':'LIVE_DATA'}")).start();
+
+            data.setText("Sending " + j);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private BigDecimal getRandomInRange(int from, int to, int fixed) {
@@ -230,3 +227,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, PICKFILE_REQUEST_CODE);
     }
 }
+
+
+
+
